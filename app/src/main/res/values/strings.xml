@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">ImaLearnSomethin</string>
+    <string name="edit_message">Enter a message</string>
+    <string name="first_name">First Name</string>
+    <string name="first_name_validation">*First Name Required</string>
+    <string name="last_name">Last Name</string>
+    <string name="address">address</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="button_send">Send</string>
+</resources>
