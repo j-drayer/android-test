@@ -1,16 +1,21 @@
 package com.example.imalearnsomethin
 
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
+import androidx.test.espresso.web.sugar.Web.onWebView
+import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
+import androidx.test.espresso.web.webdriver.DriverAtoms.getText
+import androidx.test.espresso.web.webdriver.Locator
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
-import org.hamcrest.Matchers.*
+import org.hamcrest.Matchers.containsString
+import org.hamcrest.Matchers.not
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -70,6 +75,8 @@ class ExampleInstrumentedTest {
     fun displaysContentFromRequest() {
         onView(withId(R.id.request)).perform(click())
 
-        onView(withId(R.id.response)).check(matches(withText(containsString("Example Domain"))))
+        onWebView(withId(R.id.response)).forceJavascriptEnabled()
+            .withElement(findElement(Locator.TAG_NAME, "h1"))
+            .check(webMatches(getText(), containsString("Example Domain")))
     }
 }

@@ -1,8 +1,8 @@
 package com.example.imalearnsomethin
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
+import android.webkit.WebView
+import androidx.appcompat.app.AppCompatActivity
 
 class ResponseActivity : AppCompatActivity() {
 
@@ -11,8 +11,8 @@ class ResponseActivity : AppCompatActivity() {
         setContentView(R.layout.activity_response)
 
         val responseValue = intent.getStringExtra("response")
-        findViewById<TextView>(R.id.response).apply {
-            text = responseValue
+        findViewById<WebView>(R.id.response).apply {
+            this.loadData(responseValue, "text/html","UTF-8")
         }
     }
 }
