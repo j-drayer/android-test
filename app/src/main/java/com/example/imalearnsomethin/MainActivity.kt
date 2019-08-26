@@ -1,7 +1,9 @@
 package com.example.imalearnsomethin
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -10,11 +12,13 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import kotlinx.android.synthetic.main.activity_main.*
 
 const val EXTRA_MESSAGE = "some_message_I_guess"
 
 class MainActivity : AppCompatActivity() {
     private val validationFields = mutableListOf<TextView>()
+    private val REQUEST_IMAGE_CAPTURE = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +27,22 @@ class MainActivity : AppCompatActivity() {
         validationFields += findViewById<TextView>(R.id.lastNameValidation)
     }
 
-    fun sendRequest(view: View){
+    fun takePicture(view: View) {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            takePictureIntent.resolveActivity(packageManager)?.also {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            val imageBitmap = data?.extras?.get("data") as Bitmap
+            imageView.setImageBitmap(imageBitmap)
+        }
+    }
+
+    fun sendRequest(view: View) {
         val queue = Volley.newRequestQueue(this)
         val url = "https://www.example.com"
         val stringRequest = StringRequest(
@@ -43,12 +62,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun sendMessage(view: View) {
-        validationFields.forEach{
+        validationFields.forEach {
             it.visibility = View.INVISIBLE
         }
         when {
-            firstNameIsMissing() -> findViewById<TextView>(R.id.firstNameValidation).visibility = View.VISIBLE
-            lastNameIsMissing() -> findViewById<TextView>(R.id.lastNameValidation).visibility = View.VISIBLE
+            firstNameIsMissing() -> findViewById<TextView>(R.id.firstNameValidation).visibility =
+                View.VISIBLE
+            lastNameIsMissing() -> findViewById<TextView>(R.id.lastNameValidation).visibility =
+                View.VISIBLE
             else -> {
                 val firstName = findViewById<EditText>(R.id.firstName).text.toString()
                 val lastName = findViewById<EditText>(R.id.lastName).text.toString()
